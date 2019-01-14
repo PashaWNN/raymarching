@@ -28,15 +28,15 @@ $ python3 main.py
 
 ## How it works?
 
-In ray marching algorithm, the whole 3D scene is a signed distance function. So, to define a model, you just need to define f(x, y, z) function, that return a minimal distance to this model from (X, Y, Z)
+In ray marching algorithm, the whole 3D scene is a signed distance function. So, to define a model, you just need to define `f(x, y, z)` function, that returns a minimal distance to this model from `(X, Y, Z)`
 
 For example, sphere definition in Python:
 ```python
 from math import sqrt
 
 
-def formula(self, x, y, z):
-    return sqrt(x**2 + y**2 + z**2) - self.r
+def formula(x, y, z, r):
+    return sqrt(x**2 + y**2 + z**2) - r
 ``` 
 
 It's simple!
