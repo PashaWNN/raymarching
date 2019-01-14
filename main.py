@@ -15,7 +15,7 @@ def cube_plus_sphere(x, y, z):
 renderer = RayMarching(
     width=512,
     height=512,
-    dist=2.2,
+    dist=2.6,
     sdf=cube_plus_sphere)
 
 

@@ -1,8 +1,9 @@
 # Ray Marching algorithm renderer
 
-![demo][image]
+![demo][image] ![demo][image2]
 
 [image]: https://github.com/pashawnn/raymarching/blob/master/cube.png
+[image2]: https://github.com/pashawnn/raymarching/blob/master/sphere.png
 
 Inspired by [this](https://habr.com/post/353422/) article on Habr.
 
