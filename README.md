@@ -29,7 +29,7 @@ $ python3 main.py
 
 ## How it works?
 
-In ray marching algorithm, the whole 3D scene is a signed distance function. So, to define a model, you just need to define `f(x, y, z)` function, that returns a minimal distance to this model from `(X, Y, Z)`
+In ray marching algorithm, the whole 3D scene is a signed distance function. So, to define a model, you just need to define `f(x, y, z)` function, that returns a minimal distance to this model from `(X, Y, Z)`. If this coordinates is inside of a model, distance would be with a minus sign.
 
 For example, sphere definition in Python:
 ```python
@@ -41,6 +41,22 @@ def formula(x, y, z, r):
 ``` 
 
 It's simple!
+
+To render this object, you need to instantiate renderer:
+```python
+renderer = RayMarching(
+    width=128,               # Viewport width
+    height=128,              # Viewport height
+    dist=2.6,                # Distance between (0,0,0) and camera
+    iterations=50,           # Number of marching iterations
+    sdf=formula)              # Signed Distance Function
+```
+And then call render method:
+```python
+im = renderer.render_to_image()  # PIL.Image
+# or
+ar = renderer.render_to_array()  # NumPy array, integer is pixel brightness
+```
 
 
 Feel free to do experiments with it and to contribute to my repo.
