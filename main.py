@@ -13,10 +13,11 @@ def cube_plus_sphere(x, y, z):
 
 
 renderer = RayMarching(
-    width=512,
-    height=512,
+    width=128,
+    height=128,
     dist=2.6,
-    sdf=cube_plus_sphere)
+    iterations=50,
+    sdf=cube_minus_sphere)
 
 
 im = renderer.render_to_image()
