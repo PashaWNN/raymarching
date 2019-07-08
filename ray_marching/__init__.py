@@ -1,5 +1,4 @@
-from numpy import cos, sin, tan, sqrt, array, dot, zeros, uint8
-from numpy.linalg import norm
+from numpy import cos, sin, tan, array, dot, zeros, uint8
 from numpy import ndarray
 from typing import Callable
 from PIL import Image
@@ -16,67 +15,41 @@ class RayMarching:
         self.fov = fov
         self.sdf = sdf
         self.iters = iterations
-
-    @property
-    def _rotation_matrix(self):
         a = self.alpha
         b = self.beta
-        return array([
+        self._rotation_matrix = array([
             [cos(a) * cos(b), -cos(a) * sin(b), sin(a)],
             [sin(b), cos(b), 0],
             [-cos(b) * sin(a), sin(a) * sin(b), cos(a)],
         ])
-
-    @property
-    def _cam_coordinates(self):
-        """ Get camera coordinates """
-        return dot(self._rotation_matrix, array([
+        self._cam_coordinates = dot(self._rotation_matrix, array([
             [self.dist], [0], [0],
         ]))
-
-    @property
-    def _vec_x0y0z0(self):
-        """ Get vector between cam and screen center """
-        return dot(self._rotation_matrix, array([
+        self._vec_x0y0z0 = dot(self._rotation_matrix, array([
             [-1], [0], [0],
         ]))
+        self._pixel_size = (2 * tan(self.fov / 2)) / self.height
 
-    @property
-    def _pixel_size(self):
-        """ Get pixel size on the screen """
-        return (2 * tan(self.fov / 2)) / self.height
-
-    @property
-    def _u(self):
-        return dot(self._rotation_matrix, array([
+        self._u = dot(self._rotation_matrix, array([
             [0], [0], [1],
         ])) * self._pixel_size
 
-    @property
-    def _v(self):
-        return dot(self._rotation_matrix, array([
+        self._v = dot(self._rotation_matrix, array([
             [0], [1], [0],
         ])) * self._pixel_size
+
+        self.cx, self.cy, self.cz = ndarray.tolist(ndarray.flatten(self._cam_coordinates))
+        self.dist0 = self.sdf(self.cx, self.cy, self.cz)
 
     def _ray_direction(self, x, y):
         """ Get direction of ray corresponding to screen coordinates"""
         return self._vec_x0y0z0 + x * self._u + y * self._v
 
-    def _ray(self, x, y, d):
-        """ Find ray corresponding to screen coordinates """
-        return self._cam_coordinates + d * (self._ray_direction(x, y) /
-                                            norm(self._ray_direction(x, y)))
-
-    def _dist0(self, cx, cy, cz):
-        return self.sdf(cx, cy, cz)
-
     def _get_pixel(self, x, y):
-        cx, cy, cz = ndarray.tolist(ndarray.flatten(self._cam_coordinates))
         rx, ry, rz = ndarray.tolist(ndarray.flatten(self._ray_direction(x, y)))
-        dist0 = self._dist0(cx, cy, cz)
-        k = dist0 + self.sdf(cx + rx * dist0, cy + ry * dist0, cz + rz * dist0)
+        k = self.dist0 + self.sdf(self.cx + rx * self.dist0, self.cy + ry * self.dist0, self.cz + rz * self.dist0)
         for _ in range(self.iters - 1):
-            k = k + self.sdf(cx + rx * k, cy + ry * k, cz + rz * k)
+            k = k + self.sdf(self.cx + rx * k, self.cy + ry * k, self.cz + rz * k)
         return k
 
     def render_to_array(self):

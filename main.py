@@ -8,6 +8,7 @@ cube = figures.Cube(side=1.5)
 def cube_minus_sphere(x, y, z):
     return max(-sphere.get_value(x, y, z), cube.get_value(x, y, z))
 
+
 def cube_plus_sphere(x, y, z):
     return min(sphere.get_value(x, y, z), cube.get_value(x, y, z))
 
