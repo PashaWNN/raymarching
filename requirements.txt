@@ -1,2 +1,2 @@
-numpy==1.16.0  # For matrix calculations
+numpy==1.22.0  # For matrix calculations
 
